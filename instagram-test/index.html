@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Authentication Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #C13584;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #dee2e6;
+        }
+        code {
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .test-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #C13584;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 10px 0;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .test-button:hover {
+            background-color: #833AB4;
+        }
+        .note {
+            padding: 15px;
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .result {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .params {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .param-group {
+            flex: 1 1 300px;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #C13584;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1.5s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Instagram Authentication Test Tool</h1>
+        <p>This page helps troubleshoot Instagram authentication issues by testing your app configuration directly.</p>
+        
+        <div class="note">
+            <strong>Important:</strong> This test tool will help determine if your Instagram app configuration is correct. You should be logged into the Instagram account that is added as a tester to your Meta app.
+        </div>
+        
+        <h2>App Configuration</h2>
+        <div class="params">
+            <div class="param-group">
+                <label for="client-id">Client ID (App ID)</label>
+                <input type="text" id="client-id" value="583498367953205">
+            </div>
+            
+            <div class="param-group">
+                <label for="redirect-uri">Redirect URI</label>
+                <input type="text" id="redirect-uri" value="https://srijanmishra08.github.io/reshuffle-oauth/instagram-callback">
+            </div>
+        </div>
+        
+        <div class="params">
+            <div class="param-group">
+                <label for="scope">Scope</label>
+                <input type="text" id="scope" value="user_profile,user_media">
+            </div>
+            
+            <div class="param-group">
+                <label for="response-type">Response Type</label>
+                <input type="text" id="response-type" value="code">
+            </div>
+        </div>
+        
+        <h2>Test Instagram Authentication</h2>
+        <p>Click the button below to test Instagram authentication with the configured parameters:</p>
+        
+        <button id="test-auth" class="test-button">Test Instagram Authentication</button>
+        <button id="verify-settings" class="test-button" style="background-color: #833AB4;">Verify App Settings</button>
+        
+        <div class="loader" id="loader"></div>
+        
+        <div class="result" id="result" style="display: none;">
+            <h3>Test Result</h3>
+            <div id="result-content"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>Common Issues</h2>
+        <ul>
+            <li><strong>Invalid App Error:</strong> Your Instagram account needs to be added as a tester in the Meta Developer Console.</li>
+            <li><strong>Redirect URI Mismatch:</strong> The redirect URI must exactly match what's configured in the Meta Developer Console.</li>
+            <li><strong>App Not Approved:</strong> Without app review approval, only test users can authenticate.</li>
+        </ul>
+        
+        <h2>Next Steps</h2>
+        <p>If you still encounter "invalid app" errors after testing here:</p>
+        <ol>
+            <li>Verify that your Instagram account is added as a tester in the Meta Developer Console</li>
+            <li>Ensure you've accepted the tester invitation in your Instagram account</li>
+            <li>Check that your app is properly configured with the right redirect URI</li>
+            <li>Verify the client ID matches between your app and the Meta Developer Console</li>
+        </ol>
+        
+        <a href="https://srijanmishra08.github.io/reshuffle-oauth/instagram-app-check/" class="test-button">View Detailed Troubleshooting Guide</a>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testAuthButton = document.getElementById('test-auth');
+            const verifySettingsButton = document.getElementById('verify-settings');
+            const loader = document.getElementById('loader');
+            const result = document.getElementById('result');
+            const resultContent = document.getElementById('result-content');
+            
+            testAuthButton.addEventListener('click', function() {
+                const clientId = document.getElementById('client-id').value.trim();
+                const redirectUri = document.getElementById('redirect-uri').value.trim();
+                const scope = document.getElementById('scope').value.trim();
+                const responseType = document.getElementById('response-type').value.trim();
+                
+                if (!clientId || !redirectUri) {
+                    showResult('Please fill in all required fields.', 'error');
+                    return;
+                }
+                
+                // Generate state parameter for security
+                const state = generateRandomState();
+                
+                // Construct the authentication URL
+                const authUrl = `https://api.instagram.com/oauth/authorize?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=${encodeURIComponent(responseType)}&state=${encodeURIComponent(state)}`;
+                
+                // Show the URL for debugging
+                showResult(`
+                    <p><strong>Authentication URL:</strong></p>
+                    <pre>${authUrl}</pre>
+                    <p>Opening authentication page in a new window...</p>
+                `);
+                
+                // Store the state for verification
+                localStorage.setItem('instagram_test_state', state);
+                
+                // Open the authentication URL in a new window
+                window.open(authUrl, '_blank');
+            });
+            
+            verifySettingsButton.addEventListener('click', function() {
+                showResult(`
+                    <h3>Verification Steps</h3>
+                    <ol>
+                        <li><strong>Meta Developer Console:</strong> Go to <a href="https://developers.facebook.com/apps/" target="_blank">https://developers.facebook.com/apps/</a></li>
+                        <li>Select your app</li>
+                        <li>Go to Instagram Basic Display > Settings</li>
+                        <li>Verify Client ID: ${document.getElementById('client-id').value.trim()}</li>
+                        <li>Verify Redirect URI: ${document.getElementById('redirect-uri').value.trim()}</li>
+                        <li>Verify App is in Live Mode (or you're a test user if in Development Mode)</li>
+                    </ol>
+                    
+                    <h3>Test User Setup</h3>
+                    <ol>
+                        <li>Go to Roles > Instagram Testers</li>
+                        <li>Add your Instagram account</li>
+                        <li>Accept the invitation in Instagram</li>
+                    </ol>
+                `);
+            });
+            
+            // Function to generate a random state parameter
+            function generateRandomState() {
+                const array = new Uint32Array(8);
+                window.crypto.getRandomValues(array);
+                return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
+            }
+            
+            // Function to show test results
+            function showResult(content, type = 'info') {
+                loader.style.display = 'none';
+                result.style.display = 'block';
+                resultContent.innerHTML = content;
+                
+                if (type === 'error') {
+                    resultContent.style.color = '#dc3545';
+                } else {
+                    resultContent.style.color = '#333';
+                }
+            }
+            
+            // Check for parameters in the URL (coming back from authentication)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('code') || urlParams.has('error')) {
+                // Handle the callback
+                const code = urlParams.get('code');
+                const error = urlParams.get('error');
+                const errorReason = urlParams.get('error_reason');
+                const errorDescription = urlParams.get('error_description');
+                const state = urlParams.get('state');
+                
+                // Verify state if present
+                const savedState = localStorage.getItem('instagram_test_state');
+                
+                if (code) {
+                    showResult(`
+                        <h3>Authentication Successful!</h3>
+                        <p>The Instagram authentication test was successful. Your app configuration appears to be correct.</p>
+                        <p><strong>Authorization Code:</strong> ${code.substring(0, 10)}...(truncated)</p>
+                        ${state ? `<p><strong>State:</strong> ${state}${savedState === state ? ' (verified)' : ' (not verified)'}</p>` : ''}
+                        <p>This means your Instagram app is properly configured and you should be able to authenticate in your iOS app.</p>
+                    `);
+                } else if (error) {
+                    showResult(`
+                        <h3>Authentication Error</h3>
+                        <p><strong>Error:</strong> ${error}</p>
+                        ${errorReason ? `<p><strong>Reason:</strong> ${errorReason}</p>` : ''}
+                        ${errorDescription ? `<p><strong>Description:</strong> ${errorDescription}</p>` : ''}
+                        <h4>Possible Solutions:</h4>
+                        <ul>
+                            <li>Ensure your Instagram account is added as a tester in the Meta Developer Console</li>
+                            <li>Accept the tester invitation in your Instagram account</li>
+                            <li>Verify your app is properly configured in the Meta Developer Console</li>
+                        </ul>
+                        <p>View the <a href="https://srijanmishra08.github.io/reshuffle-oauth/instagram-app-check/" target="_blank">detailed troubleshooting guide</a> for more information.</p>
+                    `, 'error');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
