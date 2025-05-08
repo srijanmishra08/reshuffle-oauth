@@ -130,7 +130,7 @@
         const APP_SCHEME = "com.srijan.Reshuffle";
         const CALLBACK_PATH = "oauth";
         const REDIRECT_DELAY = 800; // ms
-        const SHOW_DEBUG = false; // Default to hidden
+        const SHOW_DEBUG = true; // Always show debug to help troubleshoot
         const ENABLE_COUNTDOWN = true;
         const COUNTDOWN_SECONDS = 5;
         const APP_CONFIG = {
@@ -200,7 +200,7 @@
         function showPlatformStatus(message, type = 'info') {
             const platformStatus = document.getElementById('platform-status');
             const platformMessage = document.getElementById('platform-message');
-            platformMessage.textContent = message;
+            platformMessage.innerHTML = message;
             platformStatus.style.display = 'block';
             
             // Set class based on type
@@ -299,8 +299,17 @@
                 
                 // Check for specific Instagram errors
                 if (allParams.error === 'platform_error' || allParams.error === 'invalid_app') {
-                    showPlatformStatus("Your Instagram app needs configuration in Meta Developer Console. Ensure you've added yourself as a tester and verified your callback URL.", 'error');
-                    errorMessage = "Instagram platform validation failed. Please check your app settings in Meta Developer Console.";
+                    // Show very detailed platform error explanation
+                    showPlatformStatus(`
+                        <strong>Instagram Platform Error Detected</strong><br>
+                        This error usually means:<br>
+                        1. Your Instagram account is not added as a test user in Meta Developer Console<br>
+                        2. Your app is still in Development mode (not Live mode)<br>
+                        3. You haven't accepted the tester invitation in your Instagram account<br>
+                        <br>
+                        <a href="https://srijanmishra08.github.io/reshuffle-oauth/instagram-app-check/" target="_blank" style="color: #C13584;">View Detailed Troubleshooting Guide</a>
+                    `, 'error');
+                    errorMessage = "Instagram platform validation failed. Please check Meta Developer Console settings. Try using a test account that is explicitly added to the app.";
                 } else if (allParams.error === 'access_denied' || allParams.error === 'user_denied') {
                     errorMessage = "Instagram access was denied by user or system.";
                 }
@@ -324,7 +333,16 @@
             
             // If we get here, no useful parameters were found
             updateStatus("No authentication code or error found in the response", true, false);
-            showPlatformStatus("Meta's Instagram authentication service may be experiencing issues. Please try again later, or check your app configuration in the Meta Developer Console.", 'warning');
+            showPlatformStatus(`
+                <strong>No valid response parameters detected.</strong><br>
+                <br>
+                Please try these steps:<br>
+                1. Ensure your Instagram account is added as a tester<br>
+                2. Accept the tester invitation in your Instagram account<br>
+                3. Verify your app is properly configured in Meta Developer Console<br>
+                <br>
+                <a href="https://srijanmishra08.github.io/reshuffle-oauth/instagram-app-check/" target="_blank" style="color: #C13584;">View Detailed Troubleshooting Guide</a>
+            `, 'warning');
             
             return redirectUrl;
         }
@@ -386,13 +404,48 @@
             }
         }
         
+        // Add this function to test the Instagram app directly
+        function testMetaAppSettings() {
+            // Create a test URL to verify configuration in Meta Developer Console
+            const testURL = `https://api.instagram.com/oauth/authorize?client_id=${APP_CONFIG.clientId}&redirect_uri=${encodeURIComponent(APP_CONFIG.redirectUri)}&scope=user_profile,user_media&response_type=code`;
+            
+            return testURL;
+        }
+        
         // Initialize on page load
         window.onload = function() {
             try {
                 console.log("Instagram callback handler loaded");
                 console.log("URL:", window.location.href);
                 
+                // Always show debug info when troubleshooting
+                document.getElementById('debug-info').style.display = 'block';
+                document.getElementById('toggle-debug').textContent = 'Hide Debug Info';
+                
                 updateDebugInfo("Page loaded, analyzing URL...");
+                
+                // Add a direct test button to help with troubleshooting
+                const testButton = document.createElement('button');
+                testButton.className = 'manual-button';
+                testButton.style.backgroundColor = '#833AB4';
+                testButton.style.marginTop = '20px';
+                testButton.textContent = 'Test Instagram Auth Configuration';
+                testButton.onclick = function() {
+                    const testURL = testMetaAppSettings();
+                    window.open(testURL, '_blank');
+                };
+                
+                // Add a troubleshooting link
+                const troubleshootingLink = document.createElement('a');
+                troubleshootingLink.href = 'https://srijanmishra08.github.io/reshuffle-oauth/instagram-app-check/';
+                troubleshootingLink.className = 'manual-button';
+                troubleshootingLink.style.backgroundColor = '#C13584';
+                troubleshootingLink.style.marginTop = '10px';
+                troubleshootingLink.textContent = 'View Troubleshooting Guide';
+                troubleshootingLink.target = '_blank';
+                
+                document.querySelector('.container').appendChild(testButton);
+                document.querySelector('.container').appendChild(troubleshootingLink);
                 
                 // Check if this is a direct access (not a callback)
                 const params = extractAllParams();
@@ -402,14 +455,30 @@
                         document.getElementById('loader').style.display = 'none';
                         
                         // Show special message for direct access
-                        showPlatformStatus("This URL is correctly configured for Instagram API callbacks. Add this URL to your Meta Developer Console as the Valid OAuth Redirect URI.", 'info');
+                        showPlatformStatus(`
+                            <strong>This URL is correctly configured for Instagram API callbacks.</strong><br>
+                            <br>
+                            Add this URL to your Meta Developer Console as the Valid OAuth Redirect URI:<br>
+                            <code>${APP_CONFIG.redirectUri}</code><br>
+                            <br>
+                            <strong>Important:</strong> Make sure your Instagram account is added as a tester in the Meta Developer Console.
+                        `, 'info');
                         return;
                     }
                 }
                 
                 // Detect platform errors from Instagram
                 if (params.error === 'platform_error' || params.error === 'invalid_app') {
-                    showPlatformStatus("Instagram authentication failed due to app configuration issues. Please verify your app settings in the Meta Developer Console.", 'error');
+                    showPlatformStatus(`
+                        <strong>Instagram authentication failed due to app configuration issues.</strong><br>
+                        <br>
+                        Common causes:<br>
+                        1. Your Instagram account is not added as a test user<br>
+                        2. App is in Development mode without proper tester configuration<br>
+                        3. App ID or Redirect URI misconfiguration<br>
+                        <br>
+                        <a href="https://srijanmishra08.github.io/reshuffle-oauth/instagram-app-check/" target="_blank" style="color: #C13584;">View Detailed Troubleshooting Guide</a>
+                    `, 'error');
                 }
                 
                 // Try to redirect after a short delay
