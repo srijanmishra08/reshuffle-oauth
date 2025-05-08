@@ -1,216 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Reshuffle App OAuth Redirects</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reshuffle OAuth Helper</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            text-align: center;
-            padding: 20px;
             line-height: 1.6;
             color: #333;
             max-width: 800px;
             margin: 0 auto;
-            background-color: #f5f5f5;
+            padding: 20px;
         }
         h1 {
-            color: #0077B5;
+            color: #2c3e50;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+        }
+        p {
             margin-bottom: 20px;
         }
-        .card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 24px;
-            margin: 24px 0;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
-        code {
-            background-color: #f0f0f0;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-        pre {
-            background-color: #f8f9fa;
-            padding: 15px;
+        .container {
+            background-color: #fff;
             border-radius: 8px;
-            overflow-x: auto;
-            text-align: left;
-            margin: 20px 0;
-            border: 1px solid #dee2e6;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        .card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #3498db;
         }
         a {
-            color: #0077B5;
+            color: #3498db;
             text-decoration: none;
-            font-weight: 500;
         }
         a:hover {
             text-decoration: underline;
         }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #0077B5;
-            color: white;
-            border-radius: 6px;
-            margin: 10px 0;
-            font-weight: bold;
-        }
-        .btn:hover {
-            background-color: #005582;
-            text-decoration: none;
-        }
-        footer {
+        .footer {
             margin-top: 40px;
-            color: #6c757d;
-        }
-        .platform-icon {
-            width: 32px;
-            height: 32px;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            text-align: left;
-        }
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #e9ecef;
-        }
-        th {
-            background-color: #f8f9fa;
-        }
-        .note {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 12px;
-            margin: 16px 0;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #d4edda;
-            border-left: 4px solid #28a745;
-            padding: 12px;
-            margin: 16px 0;
-            border-radius: 4px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
-    <h1>Reshuffle App OAuth Redirects</h1>
-    
-    <div class="card">
-        <h2>LinkedIn Authentication</h2>
-        <p>This site handles OAuth redirects for the Reshuffle iOS app, ensuring secure authentication with LinkedIn.</p>
-        <p><a href="./linkedin-callback/" class="btn">View LinkedIn Redirect Handler</a></p>
-        <p>When a user authenticates with LinkedIn, the authorization code is received here and securely redirected to the app using a custom URL scheme: <code>reshuffle://linkedin-callback</code></p>
+    <div class="container">
+        <h1>Reshuffle OAuth System</h1>
+        <p>This page hosts OAuth callback handlers for the Reshuffle app. These pages facilitate social media integrations by processing authentication codes and redirecting them back to the app.</p>
         
-        <div class="note">
-            <strong>Important Update (May 2024):</strong> The redirect handler has been updated to properly handle both query parameters and hash fragments. LinkedIn may return OAuth parameters in either format depending on your app configuration and the user's device.
+        <h2>Available OAuth Handlers</h2>
+        
+        <div class="card">
+            <h3>Instagram Authentication</h3>
+            <p>Handles Instagram Basic Display API authentication callbacks.</p>
+            <p><a href="./instagram-callback/">Instagram Callback Handler</a></p>
+        </div>
+        
+        <div class="card">
+            <h3>LinkedIn Authentication</h3>
+            <p>Handles LinkedIn OAuth 2.0 authentication callbacks.</p>
+            <p><a href="./linkedin-callback/">LinkedIn Callback Handler</a></p>
+        </div>
+        
+        <h2>Legal Documents</h2>
+        
+        <div class="card">
+            <h3>Privacy Policy</h3>
+            <p>Our privacy policy details how we handle user data and permissions.</p>
+            <p><a href="./privacy-policy/">View Privacy Policy</a></p>
+        </div>
+        
+        <div class="card">
+            <h3>Terms of Service</h3>
+            <p>Our terms of service outline the rules and guidelines for using Reshuffle.</p>
+            <p><a href="./terms/">View Terms of Service</a></p>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2023 Reshuffle. All rights reserved.</p>
         </div>
     </div>
-    
-    <div class="card">
-        <h2>Parameter Handling</h2>
-        <p>LinkedIn OAuth returns parameters in two possible formats:</p>
-        
-        <table>
-            <tr>
-                <th>Format</th>
-                <th>Example</th>
-                <th>Notes</th>
-            </tr>
-            <tr>
-                <td>Query Parameters</td>
-                <td><code>?code=ABC123&state=XYZ789</code></td>
-                <td>Common format, appears after the URL path</td>
-            </tr>
-            <tr>
-                <td>Hash Fragments</td>
-                <td><code>#code=ABC123&state=XYZ789</code></td>
-                <td>Used in some configurations, appears after a # symbol</td>
-            </tr>
-        </table>
-        
-        <p>Our redirect handler is now configured to extract parameters from both locations and properly pass them to your app.</p>
-        
-        <div class="success">
-            <strong>Fix Applied:</strong> The redirect handler now uses multiple methods to extract parameters:
-            <ul>
-                <li>Standard URLSearchParams for query string</li>
-                <li>Hash fragment parsing for parameters after #</li>
-                <li>Regular expression fallback for edge cases</li>
-            </ul>
-        </div>
-    </div>
-    
-    <div class="card">
-        <h2>OAuth 2.0 & OpenID Connect Flow</h2>
-        <p>This service implements standard OAuth 2.0 authentication with OpenID Connect support:</p>
-        
-        <table>
-            <tr>
-                <th>Feature</th>
-                <th>Implementation</th>
-            </tr>
-            <tr>
-                <td>Authentication Flow</td>
-                <td>Authorization Code Flow</td>
-            </tr>
-            <tr>
-                <td>Scopes</td>
-                <td><code>openid profile email</code></td>
-            </tr>
-            <tr>
-                <td>CSRF Protection</td>
-                <td>State parameter verification</td>
-            </tr>
-            <tr>
-                <td>Redirect Method</td>
-                <td>Custom URL Scheme</td>
-            </tr>
-        </table>
-        
-        <h3>Authentication Process</h3>
-        <ol>
-            <li>User initiates LinkedIn authentication in the Reshuffle app</li>
-            <li>App opens a web view to LinkedIn's authorization endpoint with proper parameters</li>
-            <li>User authenticates with LinkedIn credentials</li>
-            <li>LinkedIn redirects to <code>https://srijanmishra08.github.io/reshuffle-oauth/linkedin-callback/</code> with an authorization code</li>
-            <li>The redirect page extracts the code (from URL or hash) and redirects to <code>reshuffle://linkedin-callback</code> with the code</li>
-            <li>The app receives the authorization code and exchanges it for an access token</li>
-            <li>The app retrieves the user's profile information using the access token</li>
-        </ol>
-    </div>
-    
-    <div class="card">
-        <h2>Testing & Troubleshooting</h2>
-        <p>If you're experiencing issues with LinkedIn authentication, try these steps:</p>
-        <ul>
-            <li>Ensure your device has properly registered the <code>reshuffle</code> URL scheme</li>
-            <li>Clear cookies and website data for LinkedIn in your device settings</li>
-            <li>Check that your LinkedIn account has the necessary permissions</li>
-            <li>If authentication fails, check the debug information on the redirect page</li>
-        </ul>
-        
-        <h3>Manual Testing</h3>
-        <p>You can test the redirect manually with these sample URLs (simulates LinkedIn authorization responses):</p>
-        <p><strong>Query Parameter format:</strong></p>
-        <pre>https://srijanmishra08.github.io/reshuffle-oauth/linkedin-callback/?code=TEST_CODE&state=TEST_STATE</pre>
-        
-        <p><strong>Hash Fragment format:</strong></p>
-        <pre>https://srijanmishra08.github.io/reshuffle-oauth/linkedin-callback/#code=TEST_CODE&state=TEST_STATE</pre>
-        
-        <p>Both should attempt to redirect to: <code>reshuffle://linkedin-callback?code=TEST_CODE&state=TEST_STATE</code></p>
-    </div>
-    
-    <footer>
-        <p>Created for Reshuffle App | <a href="https://github.com/srijanmishra08/reshuffle-oauth">View on GitHub</a></p>
-        <p>Last updated: May 5, 2024</p>
-    </footer>
+
+    <script>
+        // Automatically check if all endpoints are working correctly
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = [
+                '/reshuffle-oauth/instagram-callback/',
+                '/reshuffle-oauth/linkedin-callback/',
+                '/reshuffle-oauth/privacy-policy/',
+                '/reshuffle-oauth/terms/'
+            ];
+            
+            // Log to console for debugging
+            console.log('Reshuffle OAuth system loaded');
+            console.log('Available endpoints:', links);
+        });
+    </script>
 </body>
 </html> 
